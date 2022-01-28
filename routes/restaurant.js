@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Restaurant = require('../model/Restaurant');//importing restaurant schema to get the data
 const Order = require('../model/Order'); //importing orderSchema to pass user input data in the database
+const Review = require('../model/Review');//Importing reviewSchema to pass data input
 
 
 
@@ -126,6 +127,68 @@ router.post('/:id/orders', async(req, res) => {
     }catch(error){
         res.json({message:error})
     }
+
+    /* Listing orders placed by a specific user on a restaurant using get() method */
+
+    router.get('/:id/orders/:userId', async(req, res) => {
+
+        try{
+            const orders = await Order.find({
+                "restaurant_id": req.params.id, "user_id": req.params.userId
+            })
+            .populate("restaurant_id")
+            .populate("user_id");
+            res.json({message:orders});
+        }catch(error){
+            res.json({message:error})
+        }
+    })
+
+
+    /* We also need to create another route for Reviews */
+    router.post('/:id/reviews', async(req, res) => {
+         try{
+            const review = await Review({
+                user_id : req.body.user_id,
+                restaurant_id: req.params.id,
+                review: req.body.review,
+                rating: req.body.rating
+            });
+            // saving review in our database system
+            const savedReview = await review.save();
+            res.json({message:savedReview});
+
+         }catch(error){
+             res.json({message:error});
+         }
+    });
+
+    /* Listing Restaurant Review */
+    router.get('/:id/reviews', async(req, res) => {
+        try {
+            const listedReview = await Review.find({
+                "restaurant_id": req.params.id})
+                .populate("restaurant_id")
+                .populate("user_id");
+                res.json({message:listedReview});
+
+        } catch(error ){
+            res.json({message:error})
+        }
+    })
+
+
+
+    /* Deleting Restaurant Review */
+    router.delete('/:id/reviews/:reviewId', async(req, res) => {
+        try{
+            const review = await Review.remove({"_id": req.params.reviewId});
+            res.json({message:review});
+            
+        } catch(error){
+            res.json({message:error});
+        }
+    })
 
 } );
 

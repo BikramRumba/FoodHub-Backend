@@ -16,7 +16,40 @@ router.get('/:id', async(req, res) => {
     }
 });
 
+/* Listing orders place by a user
+ */
 
+router.get('/:id/orders', async(req, res) => {
+    try{
+        const order = await Order.find({
+            "user_id": req.params.id
+        })
+        .populate("user_id")
+        .populate("restaurant_id");
+
+        res.json({message:order});
+
+    }catch(error){
+        res.json({message:error});
+    }
+});
+
+
+/* Reviews placed by a specific user on restaurants */
+router.get('/:id/reviews', async(req, res) => {
+ try{
+     const reviews = await Review.find({
+         "user_id":req.params.id
+     })
+     .populate("user_id")
+     .populate("restaurant_id");
+
+     res.json({message:reviews});
+
+ }catch(error){
+     res.json({message:error});
+ }
+});
 
 
 module.exports = router;
