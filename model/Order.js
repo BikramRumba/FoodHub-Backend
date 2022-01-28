@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
     items: {
         type: String
     },
-    subTotal: {
+    total: {
         type: Number
     },
     restaurant_id: {
