@@ -10,6 +10,7 @@ dotenv.config();
 const userRoute = require('./routes/user');
 const restaurantRoute = require('./routes/restaurant');
 const searchRoute = require('./routes/search');
+const authRoute = require('./routes/auth');
 
 // Importing Middleware
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/users', userRoute);
 app.use('/restaurants', restaurantRoute);
 app.use('/search', searchRoute);
+app.use('/auth', authRoute);
 
 
 // Connected to the Database
